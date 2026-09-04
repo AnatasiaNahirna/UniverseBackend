@@ -1,0 +1,31 @@
+{
+  "name": "universebackend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnatasiaNahirna/UniverseBackend.git"
+  },
+  "keywords": [],
+  "author": "Nahirna Anastasia <akroyl419@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AnatasiaNahirna/UniverseBackend/issues"
+  },
+  "homepage": "https://github.com/AnatasiaNahirna/UniverseBackend#readme",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "editorconfig": "^3.0.2",
+    "eslint": "^10.9.1",
+    "globals": "^17.12.0",
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "prettier": "^3.9.6"
+  }
+}
