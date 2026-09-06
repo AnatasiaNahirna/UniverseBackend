@@ -9,6 +9,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { logger } from './middleware/logger.js';
 
 import universesRoutes from './routes/universesRoutes.js';
+import usersRoutes from './routes/usersRouter.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,10 +25,7 @@ app.use(logger);
 await connectMongoDB();
 
 app.use(universesRoutes);
-
-app.get('/', (req, res) => {
-  res.status(200).json({ message: 'Hello, World!' });
-});
+app.use(usersRoutes);
 
 app.use(notFoundHandler);
 app.use(errors());
