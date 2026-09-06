@@ -1,4 +1,5 @@
 import { Universe } from '../models/universe.js';
+import createHttpError from 'http-errors';
 
 export const getAllUniverses = async (req, res) => {
   const universes = await Universe.find();
@@ -10,7 +11,7 @@ export const getUniverseById = async (req, res) => {
   const universe = await Universe.findById(id);
 
   if (!universe) {
-    return res.status(404).json({ message: 'Universe not found' });
+    throw new createHttpError(404, 'Universe not found');
   }
 
   res.status(200).json(universe);
@@ -28,7 +29,7 @@ export const updateUniverse = async (req, res) => {
   });
 
   if (!universe) {
-    return res.status(404).json({ message: 'Universe not found' });
+    throw new createHttpError(404, 'Universe not found');
   }
 
   res.status(200).json(universe);
@@ -39,7 +40,7 @@ export const deleteUniverse = async (req, res) => {
   const universe = await Universe.findByIdAndDelete(id);
 
   if (!universe) {
-    return res.status(404).json({ message: 'Universe not found' });
+    throw new createHttpError(404, 'Universe not found');
   }
 
   res.status(200).json(universe);
