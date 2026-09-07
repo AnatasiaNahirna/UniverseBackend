@@ -5,6 +5,8 @@ const userSchema = new Schema(
     username: {
       type: String,
       trim: true,
+      required: true,
+      unique: true,
     },
     email: {
       type: String,
@@ -20,13 +22,6 @@ const userSchema = new Schema(
   },
   { timestamps: true, versionKey: false },
 );
-
-userSchema.pre('save', function (next) {
-  if (!this.username) {
-    this.username = this.email;
-  }
-  next();
-});
 
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();

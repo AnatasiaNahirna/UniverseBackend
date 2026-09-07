@@ -16,3 +16,16 @@ export const getUserById = async (req, res) => {
 
   res.status(200).json(user);
 };
+
+export const registerUser = async (req, res) => {
+  const { username, email, password } = req.body;
+
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    throw new createHttpError(409, 'Email already in use');
+  }
+
+  const newUser = await User.create({ username, email, password });
+
+  res.status(201).json(newUser);
+};
