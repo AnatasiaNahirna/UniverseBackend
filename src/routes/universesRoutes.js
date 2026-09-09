@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
+import { authenticate } from '../middleware/authenticate.js';
 
 import {
   getAllUniverses,
@@ -17,6 +18,7 @@ import {
 
 const router = Router();
 
+router.use('/universes', authenticate);
 router.get('/universes', getAllUniverses);
 router.get('/universes/:id', celebrate(universeIdSchema), getUniverseById);
 router.post('/universes', celebrate(createUniverseSchema), createUniverse);

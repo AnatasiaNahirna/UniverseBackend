@@ -1,6 +1,7 @@
 import express from 'express';
 import 'dotenv/config';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { errors } from 'celebrate';
 
 import { connectMongoDB } from './db/connectMongoDB.js';
@@ -14,6 +15,7 @@ import usersRoutes from './routes/usersRouter.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(logger);
 app.use(
   express.json({
     limit: '100kb',
@@ -21,7 +23,7 @@ app.use(
   }),
 );
 app.use(cors());
-app.use(logger);
+app.use(cookieParser());
 await connectMongoDB();
 
 app.use(universesRoutes);
