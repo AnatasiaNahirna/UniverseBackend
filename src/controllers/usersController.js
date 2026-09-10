@@ -6,7 +6,12 @@ import bcrypt from 'bcrypt';
 import { createSession, setSessionCookies } from '../services/auth.js';
 import { Session } from '../models/session.js';
 
+// User Management
 export const getAllUsers = async (req, res) => {
+  if (req.user.role !== 'admin' && req.user.role !== 'superadmin') {
+    throw new createHttpError(403, 'Access denied');
+  }
+
   const users = await User.find();
   res.status(200).json(users);
 };
@@ -16,18 +21,59 @@ export const getUserById = async (req, res) => {
   const user = await User.findById(id);
 
   if (!user) {
-    throw new createHttpError(404, 'User not found');
+    throw createHttpError(404, 'User not found');
   }
 
   res.status(200).json(user);
 };
 
-export const registerUser = async (req, res) => {
+export const currentUser = async (req, res) => {
+  res.status(200).json(req.user);
+};
+
+export const updateUsersRole = async (req, res) => {
+  if (req.user.role !== 'superadmin') {
+    throw new createHttpError(403, 'Access denied');
+  }
+
+  const { id } = req.params;
+  const { role } = req.body;
+
+  const updatedUser = await User.findByIdAndUpdate(id, { role }, { new: true });
+
+  if (!updatedUser) {
+    throw new createHttpError(404, 'User not found');
+  }
+
+  res.status(200).json(updatedUser);
+};
+
+export const deleteUser = async (req, res) => {
+  if (
+    req.user._id.toString() !== req.params.id &&
+    req.user.role !== 'admin' &&
+    req.user.role !== 'superadmin'
+  ) {
+    throw new createHttpError(403, 'Access denied');
+  }
+
+  const { id } = req.params;
+  const deletedUser = await User.findByIdAndDelete(id);
+
+  if (!deletedUser) {
+    throw new createHttpError(404, 'User not found');
+  }
+
+  res.status(200).json(deletedUser);
+};
+
+// User Authentication
+export const registerUser = async (req, res, next) => {
   const { username, email, password } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    throw new createHttpError(409, 'Email already in use');
+    return next(createHttpError(409, 'Email already in use'));
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -49,12 +95,12 @@ export const loginUser = async (req, res, next) => {
 
   const user = await User.findOne({ email });
   if (!user) {
-    throw new createHttpError(401, 'Invalid email or password');
+    return next(createHttpError(401, 'Invalid email or password'));
   }
 
   const isValidPassword = await bcrypt.compare(password, user.password);
   if (!isValidPassword) {
-    throw new createHttpError(401, 'Invalid email or password');
+    return next(createHttpError(401, 'Invalid email or password'));
   }
 
   await Session.deleteOne({ userId: user._id });
@@ -79,9 +125,13 @@ export const logoutUser = async (req, res) => {
   res.status(204).json({ message: 'Logged out successfully' });
 };
 
-export const updateUser = async (req, res) => {
+export const updateUser = async (req, res, next) => {
   const { id } = req.params;
   const { username } = req.body;
+
+  if (req.user._id.toString() !== id && req.user.role !== 'superadmin') {
+    return next(createHttpError(403, 'Access denied'));
+  }
 
   const updatedUser = await User.findByIdAndUpdate(
     id,
@@ -90,22 +140,10 @@ export const updateUser = async (req, res) => {
   );
 
   if (!updatedUser) {
-    throw new createHttpError(404, 'User not found');
+    return next(createHttpError(404, 'User not found'));
   }
 
   res.status(200).json(updatedUser);
-};
-
-export const deleteUser = async (req, res) => {
-  const { id } = req.params;
-
-  const deletedUser = await User.findByIdAndDelete(id);
-
-  if (!deletedUser) {
-    throw new createHttpError(404, 'User not found');
-  }
-
-  res.status(200).json(deletedUser);
 };
 
 // Session

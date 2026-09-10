@@ -34,3 +34,12 @@ export const updateUserSchema = {
     username: Joi.string().trim(),
   }),
 };
+
+export const updateUserRoleSchema = {
+  [Segments.PARAMS]: Joi.object({
+    id: Joi.string().custom(objectIdValidator).required(),
+  }),
+  [Segments.BODY]: Joi.object({
+    role: Joi.string().valid('user', 'admin', 'superadmin').required(),
+  }),
+};
