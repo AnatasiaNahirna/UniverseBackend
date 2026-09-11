@@ -19,6 +19,14 @@ const userSchema = new Schema(
       required: true,
       min: 8,
     },
+    universes: [
+      {
+        universeName: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     role: {
       type: String,
       enum: ['user', 'admin', 'superadmin'],

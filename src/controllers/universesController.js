@@ -28,6 +28,13 @@ export const createUniverse = async (req, res) => {
     ...req.body,
     owner: { username: req.user.username, _id: req.user._id },
   });
+
+  req.user.universes.push({
+    universeName: universe.name,
+    universeId: universe._id,
+  });
+  await req.user.save();
+
   res.status(201).json(universe);
 };
 
@@ -43,6 +50,11 @@ export const updateUniverse = async (req, res) => {
     throw new createHttpError(404, 'Universe not found');
   }
 
+  req.user.universes = req.user.universes.map((u) =>
+    u.universeId.toString() === id ? { ...u, universeName: universe.name } : u,
+  );
+  await req.user.save();
+
   res.status(200).json(universe);
 };
 
@@ -56,6 +68,11 @@ export const deleteUniverse = async (req, res) => {
   if (!universe) {
     throw new createHttpError(404, 'Universe not found');
   }
+
+  req.user.universes = req.user.universes.filter(
+    (u) => u._id.toString() !== id,
+  );
+  await req.user.save();
 
   res.status(200).json(universe);
 };
