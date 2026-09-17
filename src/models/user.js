@@ -19,6 +19,16 @@ const userSchema = new Schema(
       required: true,
       min: 8,
     },
+    avatar: {
+      type: String,
+      default:
+        'https://i.pinimg.com/736x/77/87/4a/77874a89b486826b091f95a152c87e4e.jpg',
+    },
+    bio: {
+      type: String,
+      trim: true,
+      default: '',
+    },
     universes: [
       {
         universeName: {

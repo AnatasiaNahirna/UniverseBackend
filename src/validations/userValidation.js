@@ -16,6 +16,7 @@ export const registerUserSchema = {
     username: Joi.string().trim().required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(8).required(),
+    bio: Joi.string().trim().allow(''),
   }),
 };
 

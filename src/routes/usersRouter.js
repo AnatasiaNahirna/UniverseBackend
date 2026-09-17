@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
 import { authenticate } from '../middleware/authenticate.js';
+import { upload } from '../middleware/multer.js';
 
 import {
   registerUserSchema,
@@ -21,6 +22,7 @@ import {
   logoutUser,
   currentUser,
   updateUsersRole,
+  updateUserAvatar,
 } from '../controllers/usersController.js';
 
 const router = Router();
@@ -45,6 +47,12 @@ router.patch(
   authenticate,
   celebrate(updateUserSchema),
   updateUser,
+);
+router.patch(
+  '/users/current/avatar',
+  authenticate,
+  upload.single('avatar'),
+  updateUserAvatar,
 );
 
 router.post('/users/refresh-session', refreshUserSession);

@@ -1,4 +1,5 @@
 import { User } from '../models/user.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
@@ -144,6 +145,24 @@ export const updateUser = async (req, res, next) => {
   }
 
   res.status(200).json(updatedUser);
+};
+
+export const updateUserAvatar = async (req, res, next) => {
+  const { file, user } = req.user;
+
+  if (!file) {
+    return next(createHttpError(400, 'No file uploaded'));
+  }
+
+  const result = await saveFileToCloudinary(req.file.buffer, user._id);
+
+  const updatedUser = await User.findOneAndUpdate(
+    { _id: user._id },
+    { avatar: result.secure_url },
+    { returnDocument: 'after' },
+  );
+
+  res.status(200).json({ url: updatedUser.avatar });
 };
 
 // Session
