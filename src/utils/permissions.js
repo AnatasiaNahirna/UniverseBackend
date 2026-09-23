@@ -1,4 +1,4 @@
-export const unniversePermissions = {
+export const universePermissions = {
   admin: [
     'viewUniverse',
     'editUniverse',
@@ -13,4 +13,9 @@ export const unniversePermissions = {
     'deleteOwnDocument',
   ],
   reader: ['viewUniverse'],
+};
+
+export const ownDocumentPermissions = {
+  editDocument: 'editOwnDocument',
+  deleteDocument: 'deleteOwnDocument',
 };
