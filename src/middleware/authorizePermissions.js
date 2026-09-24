@@ -1,9 +1,11 @@
-import { Universe } from '../models/universe';
+import { Universe } from '../models/universe.js';
 import createHttpError from 'http-errors';
-import { getUniverseRole } from '../helpers/getUniverseRole';
-import { universePermissions } from '../utils/permissions';
-import { Document } from '../models/document';
-import { ownDocumentPermissions } from '../utils/permissions';
+import { getUniverseRole } from '../helpers/getUniverseRole.js';
+import {
+  universePermissions,
+  ownDocumentPermissions,
+} from '../utils/permissions.js';
+import { Document } from '../models/document.js';
 
 export const authorizePermissions = (resource, permission) => {
   return async (req, res, next) => {
